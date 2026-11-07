@@ -101,7 +101,7 @@ Download the `.pth` files from the [release assets](https://github.com/Googolxx/
 | Medium | `dmci_medium_mse_{clean,noise}.pth` | — |
 | Large | `dmci_large_mse_{clean,noise}.pth` | `dmci_large_perceptual_noise.pth` |
 
-Fixed checkpoints follow `dmci_{base,medium,large}_fixed.pth`; `dmci_base_fixed.pth` is currently included. Only the noise-regularized perceptual checkpoint is released. Clean perceptual RD curves remain available in `results/` for comparison. `checkpoints/manifest.json` records file sizes and SHA256 hashes.
+Fixed checkpoints follow `dmci_{base,medium,large}_fixed.pth`; `dmci_base_fixed.pth` is currently included. `checkpoints/manifest.json` records file sizes and SHA256 hashes.
 
 ### 3. Evaluate
 

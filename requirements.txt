@@ -1,0 +1,9 @@
+torch
+torchvision
+numpy>=1.20.0
+tqdm
+pillow
+pybind11
+setuptools
+pyiqa
+pytorch-msssim

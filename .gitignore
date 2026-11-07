@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.so
+*.o
+build/
+dist/
+*.egg-info/
+checkpoints/*.pth
+checkpoints/*.pth.tar
+exp/
+outputs/
+results/evaluations/
+results/bdrate/
+recon/
+*.log
+.DS_Store

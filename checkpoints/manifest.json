@@ -1,0 +1,77 @@
+{
+  "format": "pytorch_state_dict",
+  "checkpoints": [
+    {
+      "file": "dmci_base_fixed.pth",
+      "model": "dmci",
+      "objective": "mse",
+      "variant": "fixed",
+      "tensors": 409,
+      "bytes": 182569785,
+      "sha256": "bb068faf035998693ee083be6b28f00e9a13ed405bed3739be29d408877405d9"
+    },
+    {
+      "file": "dmci_base_mse_clean.pth",
+      "model": "dmci",
+      "objective": "mse",
+      "variant": "clean",
+      "tensors": 409,
+      "bytes": 182756560,
+      "sha256": "b1efd309c14451d85f01d7644c89d8a963d46372103727bfd0aefb599471a5e8"
+    },
+    {
+      "file": "dmci_base_mse_noise.pth",
+      "model": "dmci",
+      "objective": "mse",
+      "variant": "noise",
+      "tensors": 409,
+      "bytes": 182756560,
+      "sha256": "2af48cdaeb38eab9f348c3f14804219c9f26b5340b8c4b9a9d782b346d26a5a7"
+    },
+    {
+      "file": "dmci_medium_mse_clean.pth",
+      "model": "dmci_medium",
+      "objective": "mse",
+      "variant": "clean",
+      "tensors": 409,
+      "bytes": 363956874,
+      "sha256": "71082761a4ba57d2594e827553042ccfddcf4b3fbb16af5eb754f934973e463b"
+    },
+    {
+      "file": "dmci_medium_mse_noise.pth",
+      "model": "dmci_medium",
+      "objective": "mse",
+      "variant": "noise",
+      "tensors": 409,
+      "bytes": 363956874,
+      "sha256": "1c35894c0bded6cd1994aefee7a35b89469c5bd0d4e2c467a13ec64f46c64e9b"
+    },
+    {
+      "file": "dmci_large_mse_clean.pth",
+      "model": "dmci_large",
+      "objective": "mse",
+      "variant": "clean",
+      "tensors": 409,
+      "bytes": 722945773,
+      "sha256": "9e9e6652edfbdcaf69bacdd594e7e072793da0b61d9facd97d6db5ab2ddbb1af"
+    },
+    {
+      "file": "dmci_large_mse_noise.pth",
+      "model": "dmci_large",
+      "objective": "mse",
+      "variant": "noise",
+      "tensors": 409,
+      "bytes": 722945773,
+      "sha256": "c10a2bab713fb7449e59cd7dcc36de501c16c48698cbca6ddd6ea340360bb6a0"
+    },
+    {
+      "file": "dmci_large_perceptual_noise.pth",
+      "model": "dmci_large",
+      "objective": "perceptual",
+      "variant": "noise",
+      "tensors": 409,
+      "bytes": 722948664,
+      "sha256": "85a41e16580819fa41c067aa9338ae97ff78ed0dead55cfb7401fd8e0eef639c"
+    }
+  ]
+}

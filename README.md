@@ -45,6 +45,9 @@ BD-Rate results; negative values mean bitrate savings.
 | DMCI-Base | **-0.90%** | **-0.85%** | **-0.80%** | **-0.85%** |
 | DMCI-Medium | **-0.98%** | **-0.93%** | **-1.24%** | **-1.05%** |
 | DMCI-Large | **-2.32%** | **-2.32%** | **-2.50%** | **-2.38%** |
+| DMCI-Base (official release)† | +2.91% | +5.60% | +5.45% | +4.66% |
+
+† Official DMCI-Base versus our reproduced clean DMCI-Base; the other rows compare NoiseRegu with the corresponding clean model.
 
 ### MSE: clean and NoiseRegu versus VTM-22.0
 
@@ -52,6 +55,7 @@ BD-Rate results; negative values mean bitrate savings.
 |---|---|---:|---:|---:|---:|
 | ELIC | Clean | -5.87% | -8.11% | -4.42% | -6.13% |
 | ELIC | **NoiseRegu** | **-7.98%** | **-11.35%** | **-6.79%** | **-8.71%** |
+| DMCI-Base | Official release | -12.67% | -15.38% | -12.63% | -13.56% |
 | DMCI-Base | Clean | -15.23% | -19.87% | -16.99% | -17.36% |
 | DMCI-Base | **NoiseRegu** | **-16.04%** | **-20.59%** | **-17.70%** | **-18.11%** |
 | DMCI-Medium | Clean | -17.37% | -21.85% | -18.45% | -19.23% |

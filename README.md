@@ -1,6 +1,7 @@
 # Noise-Regularized Training for Learned Image Compression
 
 ![NeurIPS 2026 Spotlight](https://img.shields.io/badge/NeurIPS%202026-Spotlight-6F42C1)
+[![arXiv](https://img.shields.io/badge/arXiv-2611.10073-B31B1B)](https://arxiv.org/abs/2611.10073)
 ![PyTorch](https://img.shields.io/badge/PyTorch-CUDA-EE4C2C)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -211,3 +212,20 @@ tools/        Data loading, BD-Rate, and VTM conversion
 ## License
 
 NoiseRegu-LIC is released under the [MIT License](LICENSE).
+
+## Citation
+
+If you find this work useful, please cite:
+
+```bibtex
+@misc{zou2026noisereg,
+  title={Noise-Regularized Training for Learned Image Compression},
+  author={Zou, Renjie and Huang, Zhiwei and Jiang, Dong},
+  year={2026},
+  eprint={2611.10073},
+  archivePrefix={arXiv},
+  primaryClass={eess.IV},
+  url={https://arxiv.org/abs/2611.10073},
+  note={NeurIPS 2026 Spotlight}
+}
+```

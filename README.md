@@ -1,19 +1,21 @@
-# Noise-Regularized Training for Learned Image Compression
+# NoiseRegu-LIC
 
-![NeurIPS 2026 Spotlight](https://img.shields.io/badge/NeurIPS%202026-Spotlight-6F42C1)
-[![arXiv](https://img.shields.io/badge/arXiv-2611.10073-B31B1B)](https://arxiv.org/abs/2611.10073)
-![PyTorch](https://img.shields.io/badge/PyTorch-CUDA-EE4C2C)
-![License](https://img.shields.io/badge/License-MIT-green)
+**Noise-Regularized Training for Learned Image Compression**  
+**NeurIPS 2026 Spotlight**
 
-NoiseRegu-LIC adds Gaussian noise to the **encoder input** during training while keeping the clean image as the reconstruction target. The latent noise proxy, hyperprior, entropy coder, and inference pipeline remain unchanged.
+[![Paper](https://img.shields.io/badge/arXiv-2611.10073-b31b1b.svg)](https://arxiv.org/abs/2611.10073)
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS%202026-Spotlight-6f42c1.svg)](https://arxiv.org/abs/2611.10073)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-- One training-only change, no inference overhead.
-- DMCI Base, Medium, and Large checkpoints.
-- Real entropy-coded evaluation, BD-Rate, VTM anchors, and 57 reference RD files.
+A lightweight noise regularizer, a strong end-to-end codec training framework, and reproducible evaluation tools—all in one place.
 
-## Use it in your codec
+## What’s in this repository?
 
-The complete training-side change is only a few lines:
+### 1. A noise regularizer you can drop into almost any codec
+
+NoiseRegu adds Gaussian noise to the **encoder input** during training while keeping the clean image as the reconstruction target. It is architecture-agnostic, works with existing learned image compression frameworks, and introduces essentially no additional training or inference overhead. Porting it to another codec takes only a few lines of code.
+
+#### Use in your own codec
 
 ```python
 sigma_start = 0.5                      # recommended: [0.4, 0.8]
@@ -27,18 +29,52 @@ x_hat, rate = codec(x)
 loss = rate + lam * mse(x_hat, target)  # clean target
 ```
 
-The latent noise proxy, entropy model, and inference code stay untouched. Anneal `sigma` during training, starting in `[0.4, 0.8]`:
+That is the entire training-side change. The latent noise proxy, hyperprior, entropy model, and inference code stay untouched.
 
-- **Two stages (256×256 → 512×512):** anneal noise throughout the 256×256 stage, then fine-tune at 512×512 without noise.
-- **One stage:** stop noise at roughly 80–90% of training, for example `noise_epochs = int(0.85 * epochs)`.
+- **Two-stage training (256×256 → 512×512):** anneal noise throughout the 256×256 stage, then fine-tune at 512×512 without noise.
+- **Single-stage training:** stop noise at roughly 80–90% of training.
 
-A second-order analysis shows that this produces an information-weighted encoder-Jacobian penalty and a contractive penalty on the reconstruction map.
+### 2. A powerful end-to-end training framework
 
-## Results
+Beyond the regularizer, this repository provides the core algorithm and training framework behind our first-place solutions in two challenges:
 
-BD-Rate results; negative values mean bitrate savings.
+- **First place, image track:** [1st Challenge on Perceptual Video & Image Coding](https://icme2026.labiip.com/), ICME 2026.
+- **First place, objective track:** [LoViF 2026 AIGC Image Compression Challenge: Methods and Results](https://openreview.net/pdf?id=41hfEpLx7Z).
 
-### MSE: NoiseRegu versus clean
+**Perceptual training vs. VTM-22.0**  
+BD-Rate averaged over Kodak, Tecnick, and CLIC; negative values mean bitrate savings.
+
+| PSNR | MS-SSIM | LPIPS | DISTS |
+|---:|---:|---:|---:|
+| **-14.36%** | **-14.41%** | **-89.91%** | **-90.84%** |
+
+### 3. Tools for evaluation, comparison, and alignment
+
+The repository also includes practical utilities for reproducing and extending our results:
+
+- Real entropy-coded evaluation with PSNR, MS-SSIM, LPIPS, and DISTS.
+- DMCI Base, Medium, and Large checkpoints, including perceptual training.
+- VTM-22.0 anchors and scripts for consistent baseline comparisons.
+- 57 reference rate–distortion files covering DMCI, ELIC, TCM, MLIC++, DCAE, LALIC, and HPCM.
+- Small, editable scripts for training, evaluation, BD-Rate calculation, and result alignment.
+
+## Why NoiseRegu works
+
+NoiseRegu moves stochastic perturbation from the latent domain to the encoder input, while the reconstruction target remains clean. A second-order analysis shows that this creates two useful forms of regularization: an **information-weighted encoder-Jacobian penalty** on the rate term and a **contractive penalty** on the end-to-end reconstruction map. In practice, this improves rate–distortion performance without changing the codec architecture or inference pipeline.
+
+## Results at a glance
+
+- **ELIC:** **-2.60%** average BD-Rate compared with clean training.
+- **DMCI Base / Medium / Large:** **-0.85% / -1.05% / -2.38%** compared with their clean counterparts.
+- **DMCI-Large:** **-22.02%** average BD-Rate against VTM-22.0.
+- **Perceptual training:** consistent gains over clean training across PSNR, MS-SSIM, LPIPS, and DISTS.
+
+All results below report BD-Rate; negative values mean bitrate savings.
+
+<details>
+<summary><strong>Full MSE results</strong></summary>
+
+### NoiseRegu versus clean training
 
 | Backbone | Kodak | Tecnick | CLIC | Average |
 |---|---:|---:|---:|---:|
@@ -50,7 +86,7 @@ BD-Rate results; negative values mean bitrate savings.
 
 † Official DMCI-Base versus our reproduced clean DMCI-Base; the other rows compare NoiseRegu with the corresponding clean model.
 
-### MSE: clean and NoiseRegu versus VTM-22.0
+### Clean and NoiseRegu versus VTM-22.0
 
 | Backbone | Variant | Kodak | Tecnick | CLIC | Average |
 |---|---|---:|---:|---:|---:|
@@ -64,7 +100,12 @@ BD-Rate results; negative values mean bitrate savings.
 | DMCI-Large | Clean | -18.50% | -22.67% | -18.93% | -20.03% |
 | DMCI-Large | **NoiseRegu** | **-20.47%** | **-24.55%** | **-21.06%** | **-22.02%** |
 
-**Mixed perceptual objective: NoiseRegu versus clean**
+</details>
+
+<details>
+<summary><strong>Full perceptual results</strong></summary>
+
+### NoiseRegu versus clean training
 
 | Dataset | PSNR | MS-SSIM | LPIPS | DISTS |
 |---|---:|---:|---:|---:|
@@ -72,7 +113,7 @@ BD-Rate results; negative values mean bitrate savings.
 | Tecnick | -0.63% | -0.77% | -1.12% | -1.94% |
 | CLIC | -1.01% | -1.49% | -2.83% | -4.85% |
 
-**Mixed perceptual objective: clean and NoiseRegu versus VTM-22.0**
+### Clean and NoiseRegu versus VTM-22.0
 
 | Dataset | Variant | PSNR | MS-SSIM | LPIPS | DISTS |
 |---|---|---:|---:|---:|---:|
@@ -82,6 +123,8 @@ BD-Rate results; negative values mean bitrate savings.
 | Tecnick | **NoiseRegu** | **-17.65%** | **-15.32%** | **-87.43%** | **-88.43%** |
 | CLIC | Clean | -8.59% | -6.26% | -91.49% | -92.92% |
 | CLIC | **NoiseRegu** | **-9.69%** | **-7.87%** | **-91.65%** | **-93.07%** |
+
+</details>
 
 ## Get started
 
@@ -100,13 +143,13 @@ Real entropy coding requires CUDA and the rANS extension. Custom CUDA inference 
 
 Download the `.pth` files from the [release assets](https://github.com/Googolxx/NoiseRegu-LIC/releases) and place them in `checkpoints/`.
 
-| Backbone | MSE | Perceptual |
-|---|---|---|
-| Base | `dmci_base_mse_{clean,noise}.pth` | — |
-| Medium | `dmci_medium_mse_{clean,noise}.pth` | — |
-| Large | `dmci_large_mse_{clean,noise}.pth` | `dmci_large_perceptual_noise.pth` |
+```text
+MSE:         dmci_{base,medium,large}_mse_{clean,noise}.pth
+Perceptual:  dmci_large_perceptual_noise.pth
+Fixed-QP:    dmci_{base,medium,large}_fixed.pth
+```
 
-Fixed checkpoints follow `dmci_{base,medium,large}_fixed.pth`; `dmci_base_fixed.pth` is currently included. `checkpoints/manifest.json` records file sizes and SHA256 hashes.
+`dmci_base_fixed.pth` is currently included. `checkpoints/manifest.json` records file sizes and SHA256 hashes.
 
 ### 3. Evaluate
 
@@ -144,7 +187,7 @@ DMCI is variable-rate, but training starts from a fixed-QP model.
 
 ### Training data
 
-We used [MLIC-Train-100K](https://huggingface.co/datasets/Whiteboat/MLIC-Train-100K). Everyone has a favorite training set; in our experience, we picked this one because training felt relatively stable
+We used [MLIC-Train-100K](https://huggingface.co/datasets/Whiteboat/MLIC-Train-100K). You can use your own dataset; we chose this one because training was relatively stable in our experiments.
 
 ### 1. Fixed-QP pretraining
 
@@ -185,18 +228,7 @@ Run `bash scripts/vtm.sh`. VTM binaries and datasets are not redistributed. In p
 
 ## Reference data and repository layout
 
-All 57 reference JSON files are directly under `results/`: DMCI, ELIC, TCM, MLIC++, DCAE, LALIC, HPCM, and VTM share one compact schema:
-
-```json
-{
-  "name": "dmci_base_noise_kodak",
-  "dataset": "kodak",
-  "qps": [0, 9, 18, 27, 36, 45, 54, 63],
-  "results": {"bpp": ["..."], "psnr": ["..."]}
-}
-```
-
-Perceptual files additionally contain `ms_ssim`, `lpips`, and `dists`. Arrays follow the order in `qps`. New evaluations go to `results/evaluations/`; BD-Rate outputs go to `results/bdrate/`.
+All 57 reference JSON files are directly under `results/`. New evaluations go to `results/evaluations/`; BD-Rate outputs go to `results/bdrate/`.
 
 ```text
 src/          DMCI models, layers, utilities, and rANS source
@@ -208,6 +240,24 @@ results/      Reference RD curves
 bench/        VTM benchmark runner and configuration
 tools/        Data loading, BD-Rate, and VTM conversion
 ```
+
+<details>
+<summary><strong>Reference JSON format</strong></summary>
+
+DMCI, ELIC, TCM, MLIC++, DCAE, LALIC, HPCM, and VTM share one compact schema:
+
+```json
+{
+  "name": "dmci_base_noise_kodak",
+  "dataset": "kodak",
+  "qps": [0, 9, 18, 27, 36, 45, 54, 63],
+  "results": {"bpp": ["..."], "psnr": ["..."]}
+}
+```
+
+Perceptual files additionally contain `ms_ssim`, `lpips`, and `dists`. Arrays follow the order in `qps`.
+
+</details>
 
 ## License
 
